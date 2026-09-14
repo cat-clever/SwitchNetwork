@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- 仓库地址来自 Config/SwitchNetwork.xcconfig，$(...) 在构建时会被展开。
+	     其余 Info.plist 的键仍由 GENERATE_INFOPLIST_FILE 自动生成，和这里合并。 -->
+	<key>SwitchNetworkGitHubRepo</key>
+	<string>$(SWITCHNETWORK_GITHUB_REPO)</string>
+</dict>
+</plist>

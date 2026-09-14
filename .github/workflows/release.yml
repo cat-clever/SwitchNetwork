@@ -1,0 +1,98 @@
+name: Release
+
+# 版本号在 Config/SwitchNetwork.xcconfig 里，改了它 push 到 main 就会自动发版。
+#
+# 分成两个 job 是为了省钱：先在一个便宜的 Linux runner 上读版本号、看标签在不在，
+# 只有「版本变了、标签还不存在」时才去开 macOS runner 编译打包。
+# 一直停在 0.0.1 地推，就只跑那个几秒钟的检查，不会白编译一次。
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - '**.md'
+      - '.gitignore'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  version:
+    runs-on: ubuntu-latest
+    outputs:
+      value: ${{ steps.read.outputs.value }}
+      changed: ${{ steps.read.outputs.changed }}
+    steps:
+      - name: 取源码
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 读版本号并判断是否已发布
+        id: read
+        run: |
+          set -euo pipefail
+          VERSION=$(awk -F'=' '/^[[:space:]]*MARKETING_VERSION[[:space:]]*=/ {gsub(/[[:space:]]/, "", $2); print $2; exit}' Config/SwitchNetwork.xcconfig)
+          if [ -z "$VERSION" ]; then
+            echo "::error::Config/SwitchNetwork.xcconfig 里读不到 MARKETING_VERSION"
+            exit 1
+          fi
+          echo "value=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "配置里的版本号是 $VERSION"
+          if git ls-remote --tags origin "refs/tags/v$VERSION" | grep -q .; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "v$VERSION 已经发过了，这次不编译。要重新发请先在 GitHub 上删掉那个 Release 和标签，或者把版本号调大。"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "v$VERSION 还没发过，接下来编译打包。"
+          fi
+
+  release:
+    needs: version
+    if: needs.version.outputs.changed == 'true'
+    # 固定镜像版本，别用 macos-latest，免得镜像一换代就红。
+    runs-on: macos-15
+    steps:
+      - name: 取源码
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 编译并打包 dmg
+        env:
+          VERSION: ${{ needs.version.outputs.value }}
+        run: |
+          set -euo pipefail
+          # 仓库里没有开发者证书，只能临时签名（ad-hoc）：
+          # Automatic 在没有团队的情况下会直接编译失败，所以这里手动指定 "-"。
+          # ad-hoc 仍然会把 entitlements 写进去，功能不受影响。
+          ./make_dmg.sh Release \
+            CODE_SIGN_STYLE=Manual \
+            CODE_SIGN_IDENTITY="-" \
+            CODE_SIGNING_REQUIRED=NO
+
+      - name: 生成校验和
+        env:
+          VERSION: ${{ needs.version.outputs.value }}
+        run: |
+          set -euo pipefail
+          DMG="SwitchNetwork-$VERSION.dmg"
+          shasum -a 256 "$DMG" > "$DMG.sha256"
+          cat "$DMG.sha256"
+          ls -lh "$DMG"
+
+      - name: 发 Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ needs.version.outputs.value }}
+        run: |
+          set -euo pipefail
+          DMG="SwitchNetwork-$VERSION.dmg"
+          gh release create "v$VERSION" "$DMG" "$DMG.sha256" \
+            --title "SwitchNetwork $VERSION" \
+            --target "$GITHUB_SHA" \
+            --generate-notes

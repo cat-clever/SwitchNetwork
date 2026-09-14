@@ -1,0 +1,17 @@
+# Xcode 每个用户自己的界面状态（别人的机器上没用）
+xcuserdata/
+*.xcuserstate
+*.xcscmblueprint
+
+# 构建产物
+DerivedData/
+build/
+dmg-stage/
+*.dmg
+*.dmg.sha256
+*.dSYM
+*.xcarchive
+
+# macOS
+.DS_Store
+._*

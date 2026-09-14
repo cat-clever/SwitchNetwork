@@ -27,6 +27,8 @@
 		2EBAF6823057BDDE00F52FEC /* SwitchNetwork.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwitchNetwork.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2EBAF6903057BDDF00F52FEC /* SwitchNetworkTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwitchNetworkTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2EBAF69A3057BDDF00F52FEC /* SwitchNetworkUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwitchNetworkUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		2EBAF6AD3057BDDF00F52FEC /* Config/SwitchNetwork.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config/SwitchNetwork.xcconfig; sourceTree = "<group>"; };
+		2EBAF6AE3057BDDF00F52FEC /* Config/Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Config/Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -78,6 +80,8 @@
 				2EBAF6843057BDDE00F52FEC /* SwitchNetwork */,
 				2EBAF6933057BDDF00F52FEC /* SwitchNetworkTests */,
 				2EBAF69D3057BDDF00F52FEC /* SwitchNetworkUITests */,
+				2EBAF6AD3057BDDF00F52FEC /* Config/SwitchNetwork.xcconfig */,
+				2EBAF6AE3057BDDF00F52FEC /* Config/Info.plist */,
 				2EBAF6833057BDDE00F52FEC /* Products */,
 			);
 			sourceTree = "<group>";
@@ -271,6 +275,7 @@
 /* Begin XCBuildConfiguration section */
 		2EBAF6A23057BDDF00F52FEC /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2EBAF6AD3057BDDF00F52FEC /* Config/SwitchNetwork.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -334,6 +339,7 @@
 		};
 		2EBAF6A33057BDDF00F52FEC /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2EBAF6AD3057BDDF00F52FEC /* Config/SwitchNetwork.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -395,15 +401,16 @@
 				CODE_SIGN_ENTITLEMENTS = SwitchNetwork/SwitchNetwork.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Config/Info.plist;
+				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.CleverCat.SwitchNetwork;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
@@ -420,15 +427,16 @@
 				CODE_SIGN_ENTITLEMENTS = SwitchNetwork/SwitchNetwork.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Config/Info.plist;
+				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.CleverCat.SwitchNetwork;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
@@ -442,10 +450,8 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 15.5;
-				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.CleverCat.SwitchNetworkTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
@@ -459,10 +465,8 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 15.5;
-				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.CleverCat.SwitchNetworkTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
@@ -475,9 +479,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.CleverCat.SwitchNetworkUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
@@ -490,9 +492,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.CleverCat.SwitchNetworkUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;

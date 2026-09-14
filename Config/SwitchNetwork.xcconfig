@@ -1,0 +1,12 @@
+// SwitchNetwork 构建配置 —— 版本号和仓库地址只在这里改一处。
+//
+// 改完 MARKETING_VERSION 之后 push 到 main 分支，
+// GitHub Action 会自动编译、按 v<版本> 打 tag、发 Release，并把带版本号的 dmg 传上去。
+//
+// 注意：别在 Xcode 的「Versioning」栏里改版本，那会把值写回 project.pbxproj 而盖掉这里。
+
+MARKETING_VERSION = 0.0.1
+CURRENT_PROJECT_VERSION = 1
+
+// GitHub 仓库，格式 用户名/仓库名（不要写 https:// 前缀，xcconfig 里 // 是注释符号）
+SWITCHNETWORK_GITHUB_REPO = cat-clever/SwitchNetwork

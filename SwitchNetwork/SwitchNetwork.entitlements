@@ -2,8 +2,11 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<!-- 必须关闭 App Sandbox：沙盒内的进程无法通过 sudo 调用
+	     /usr/sbin/networksetup 与 /sbin/route，也就改不了 IP 和路由。
+	     本应用不使用 App Store 分发，因此不受沙盒强制要求。 -->
 	<key>com.apple.security.app-sandbox</key>
-	<true/>
+	<false/>
 	<key>com.apple.security.files.user-selected.read-only</key>
 	<true/>
 </dict>
