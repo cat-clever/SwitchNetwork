@@ -1,0 +1,546 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXContainerItemProxy section */
+		2EBAF6913057BDDF00F52FEC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2EBAF67A3057BDDE00F52FEC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2EBAF6813057BDDE00F52FEC;
+			remoteInfo = SwitchNetwork;
+		};
+		2EBAF69B3057BDDF00F52FEC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2EBAF67A3057BDDE00F52FEC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2EBAF6813057BDDE00F52FEC;
+			remoteInfo = SwitchNetwork;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		2EBAF6823057BDDE00F52FEC /* SwitchNetwork.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwitchNetwork.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2EBAF6903057BDDF00F52FEC /* SwitchNetworkTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwitchNetworkTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		2EBAF69A3057BDDF00F52FEC /* SwitchNetworkUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwitchNetworkUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		2EBAF6843057BDDE00F52FEC /* SwitchNetwork */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = SwitchNetwork;
+			sourceTree = "<group>";
+		};
+		2EBAF6933057BDDF00F52FEC /* SwitchNetworkTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = SwitchNetworkTests;
+			sourceTree = "<group>";
+		};
+		2EBAF69D3057BDDF00F52FEC /* SwitchNetworkUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = SwitchNetworkUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		2EBAF67F3057BDDE00F52FEC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2EBAF68D3057BDDF00F52FEC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2EBAF6973057BDDF00F52FEC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		2EBAF6793057BDDE00F52FEC = {
+			isa = PBXGroup;
+			children = (
+				2EBAF6843057BDDE00F52FEC /* SwitchNetwork */,
+				2EBAF6933057BDDF00F52FEC /* SwitchNetworkTests */,
+				2EBAF69D3057BDDF00F52FEC /* SwitchNetworkUITests */,
+				2EBAF6833057BDDE00F52FEC /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		2EBAF6833057BDDE00F52FEC /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2EBAF6823057BDDE00F52FEC /* SwitchNetwork.app */,
+				2EBAF6903057BDDF00F52FEC /* SwitchNetworkTests.xctest */,
+				2EBAF69A3057BDDF00F52FEC /* SwitchNetworkUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		2EBAF6813057BDDE00F52FEC /* SwitchNetwork */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2EBAF6A43057BDDF00F52FEC /* Build configuration list for PBXNativeTarget "SwitchNetwork" */;
+			buildPhases = (
+				2EBAF67E3057BDDE00F52FEC /* Sources */,
+				2EBAF67F3057BDDE00F52FEC /* Frameworks */,
+				2EBAF6803057BDDE00F52FEC /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				2EBAF6843057BDDE00F52FEC /* SwitchNetwork */,
+			);
+			name = SwitchNetwork;
+			packageProductDependencies = (
+			);
+			productName = SwitchNetwork;
+			productReference = 2EBAF6823057BDDE00F52FEC /* SwitchNetwork.app */;
+			productType = "com.apple.product-type.application";
+		};
+		2EBAF68F3057BDDF00F52FEC /* SwitchNetworkTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2EBAF6A73057BDDF00F52FEC /* Build configuration list for PBXNativeTarget "SwitchNetworkTests" */;
+			buildPhases = (
+				2EBAF68C3057BDDF00F52FEC /* Sources */,
+				2EBAF68D3057BDDF00F52FEC /* Frameworks */,
+				2EBAF68E3057BDDF00F52FEC /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2EBAF6923057BDDF00F52FEC /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				2EBAF6933057BDDF00F52FEC /* SwitchNetworkTests */,
+			);
+			name = SwitchNetworkTests;
+			packageProductDependencies = (
+			);
+			productName = SwitchNetworkTests;
+			productReference = 2EBAF6903057BDDF00F52FEC /* SwitchNetworkTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		2EBAF6993057BDDF00F52FEC /* SwitchNetworkUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2EBAF6AA3057BDDF00F52FEC /* Build configuration list for PBXNativeTarget "SwitchNetworkUITests" */;
+			buildPhases = (
+				2EBAF6963057BDDF00F52FEC /* Sources */,
+				2EBAF6973057BDDF00F52FEC /* Frameworks */,
+				2EBAF6983057BDDF00F52FEC /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2EBAF69C3057BDDF00F52FEC /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				2EBAF69D3057BDDF00F52FEC /* SwitchNetworkUITests */,
+			);
+			name = SwitchNetworkUITests;
+			packageProductDependencies = (
+			);
+			productName = SwitchNetworkUITests;
+			productReference = 2EBAF69A3057BDDF00F52FEC /* SwitchNetworkUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		2EBAF67A3057BDDE00F52FEC /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1640;
+				LastUpgradeCheck = 1640;
+				TargetAttributes = {
+					2EBAF6813057BDDE00F52FEC = {
+						CreatedOnToolsVersion = 16.4;
+					};
+					2EBAF68F3057BDDF00F52FEC = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = 2EBAF6813057BDDE00F52FEC;
+					};
+					2EBAF6993057BDDF00F52FEC = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = 2EBAF6813057BDDE00F52FEC;
+					};
+				};
+			};
+			buildConfigurationList = 2EBAF67D3057BDDE00F52FEC /* Build configuration list for PBXProject "SwitchNetwork" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 2EBAF6793057BDDE00F52FEC;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 2EBAF6833057BDDE00F52FEC /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				2EBAF6813057BDDE00F52FEC /* SwitchNetwork */,
+				2EBAF68F3057BDDF00F52FEC /* SwitchNetworkTests */,
+				2EBAF6993057BDDF00F52FEC /* SwitchNetworkUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		2EBAF6803057BDDE00F52FEC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2EBAF68E3057BDDF00F52FEC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2EBAF6983057BDDF00F52FEC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		2EBAF67E3057BDDE00F52FEC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2EBAF68C3057BDDF00F52FEC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2EBAF6963057BDDF00F52FEC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		2EBAF6923057BDDF00F52FEC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2EBAF6813057BDDE00F52FEC /* SwitchNetwork */;
+			targetProxy = 2EBAF6913057BDDF00F52FEC /* PBXContainerItemProxy */;
+		};
+		2EBAF69C3057BDDF00F52FEC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2EBAF6813057BDDE00F52FEC /* SwitchNetwork */;
+			targetProxy = 2EBAF69B3057BDDF00F52FEC /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		2EBAF6A23057BDDF00F52FEC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		2EBAF6A33057BDDF00F52FEC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		2EBAF6A53057BDDF00F52FEC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = SwitchNetwork/SwitchNetwork.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.CleverCat.SwitchNetwork;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		2EBAF6A63057BDDF00F52FEC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = SwitchNetwork/SwitchNetwork.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.CleverCat.SwitchNetwork;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		2EBAF6A83057BDDF00F52FEC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.CleverCat.SwitchNetworkTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SwitchNetwork.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/SwitchNetwork";
+			};
+			name = Debug;
+		};
+		2EBAF6A93057BDDF00F52FEC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.CleverCat.SwitchNetworkTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SwitchNetwork.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/SwitchNetwork";
+			};
+			name = Release;
+		};
+		2EBAF6AB3057BDDF00F52FEC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.CleverCat.SwitchNetworkUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = SwitchNetwork;
+			};
+			name = Debug;
+		};
+		2EBAF6AC3057BDDF00F52FEC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.CleverCat.SwitchNetworkUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = SwitchNetwork;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2EBAF67D3057BDDE00F52FEC /* Build configuration list for PBXProject "SwitchNetwork" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2EBAF6A23057BDDF00F52FEC /* Debug */,
+				2EBAF6A33057BDDF00F52FEC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2EBAF6A43057BDDF00F52FEC /* Build configuration list for PBXNativeTarget "SwitchNetwork" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2EBAF6A53057BDDF00F52FEC /* Debug */,
+				2EBAF6A63057BDDF00F52FEC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2EBAF6A73057BDDF00F52FEC /* Build configuration list for PBXNativeTarget "SwitchNetworkTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2EBAF6A83057BDDF00F52FEC /* Debug */,
+				2EBAF6A93057BDDF00F52FEC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2EBAF6AA3057BDDF00F52FEC /* Build configuration list for PBXNativeTarget "SwitchNetworkUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2EBAF6AB3057BDDF00F52FEC /* Debug */,
+				2EBAF6AC3057BDDF00F52FEC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 2EBAF67A3057BDDE00F52FEC /* Project object */;
+}
