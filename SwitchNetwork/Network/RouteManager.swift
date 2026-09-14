@@ -14,6 +14,16 @@ enum RouteError: LocalizedError {
     }
 }
 
+/// 一次删除的结果。
+///
+/// 不能只看 route 的退出码：它遇到「表里本来就没有这条」时只打印一句 not in table，
+/// 退出码仍是 0。所以「到底删掉了没有」得单独告诉调用方——没真删掉的那条不能进
+/// 「本次删除」，否则用户一点撤回，就会把一条早就不存在、也不会再出现的路由加进表里。
+struct RouteRemoval {
+    let message: String
+    let removed: Bool
+}
+
 enum RouteCheckStatus: Equatable {
     case ok
     case missing
@@ -57,15 +67,25 @@ enum RouteManager {
     // MARK: - 读取
 
     static func currentRoutes() -> [RouteEntry] {
+        return readRoutes().routes
+    }
+
+    /// 读整张 IPv4 路由表，并且告诉调用方这次到底读成功没有。
+    ///
+    /// macOS 的路由表不可能真的为空（至少有 lo0 和各接口的直连路由），
+    /// 所以解析结果为空只可能是读失败。界面要能把「读失败」和「表是空的」分开显示，
+    /// 否则一次 netstat 失败会让用户以为路由全没了。
+    static func readRoutes() -> (routes: [RouteEntry], failed: Bool) {
         guard let result = try? Shell.run(Shell.netstatPath, ["-rn", "-f", "inet"]) else {
             Log.shared.error(L.t("执行 netstat 失败"))
-            return []
+            return ([], true)
         }
         guard result.succeeded else {
             Log.shared.error(L.t("读取路由表失败：%@", result.combinedMessage))
-            return []
+            return ([], true)
         }
-        return parseNetstat(result.standardOutput)
+        let routes = parseNetstat(result.standardOutput)
+        return (routes, routes.isEmpty)
     }
 
     /// 解析 macOS 的 netstat 输出。注意它是 BSD 经典记法：
@@ -87,6 +107,13 @@ enum RouteManager {
 
             let tokens = line.split(separator: " ", omittingEmptySubsequences: true).map(String.init)
             guard tokens.count >= 4 else { continue }
+
+            // 跳过 ARP / 链路层条目（`192.168.137.1 0:e0:4c:29:b:28 UHLWIir en0` 这种）。
+            // 它们的「下一跳」是硬件地址而不是 IP，不归 route 命令管：删或改都会失败，
+            // 摆在页面上还会被当成静态路由、给出一排点不动的按钮。
+            // 硬件地址有两种写法（点分 `ff.ff.ff.ff.ff.ff`、冒号 `0:e0:4c:29:b:28`），
+            // 所以判据是「不是 IPv4」，而不是「含冒号」——link#N 也是非 IPv4，但它要留着。
+            if !tokens[1].hasPrefix("link#") && !IPv4.isValidAddress(tokens[1]) { continue }
 
             guard let interpreted = interpretDestination(tokens[0]) else { continue }
             entries.append(RouteEntry(destination: interpreted.network,
@@ -262,7 +289,130 @@ enum RouteManager {
         return try delete(network: network, prefix: prefix, gateway: gateway)
     }
 
+    // MARK: - 路由表：按整行操作
+
+    /// 删除路由表里的任意一条，包括系统自带的默认路由和接口直连路由。
+    ///
+    /// 和 `remove(_ route:)` 的分工：那个只处理「配置里的静态路由」，遇到 link# 直连
+    /// 会主动拒绝。这个页面用户是直接对着路由表点的，所以照做，只把命令参数拼对。
+    static func delete(entry: RouteEntry) throws -> RouteRemoval {
+        guard let prefix = entry.prefixLength else {
+            throw RouteError.invalidRoute(L.t("%@ 的掩码 %@ 不是合法掩码，无法删除这条路由",
+                                              entry.destination, entry.mask))
+        }
+        let label = destinationLabel(entry, prefix: prefix)
+
+        // 界面上显示的是上一次读的快照，这中间系统可能已经把这条撤了
+        // （拔网线、DHCP 续约、VPN 断开都会）。用户的目的已经达到，不算失败，
+        // 但也确实没删掉什么，所以要如实告诉调用方。
+        guard isPresent(entry) else {
+            return RouteRemoval(message: L.t("%@ 已经不在路由表里了", label), removed: false)
+        }
+
+        var arguments = ["-n", "delete"] + scopeArguments(entry)
+            + destinationArguments(entry, prefix: prefix)
+        // link#N 是 netstat 的内部链路表示，不是下一跳地址，传给 route 会被当成地址解析而失败，
+        // 省略网关才删得掉；带真实网关的路由反过来必须带上，否则报 not in table。
+        if !entry.isInterfaceScope && !entry.gateway.isEmpty {
+            arguments.append(entry.gateway)
+        }
+
+        let result = try Shell.run(Shell.routePath, arguments, privileged: true)
+        guard result.succeeded else {
+            throw RouteError.commandFailed(L.t("route delete %@ 失败：%@", label, result.combinedMessage))
+        }
+        // route 删不掉时也可能给 0（例如写 routing socket 失败），所以不信退出码，读一次表确认。
+        if isPresent(entry) {
+            throw RouteError.commandFailed(L.t("route delete %@ 没有生效，这条路由还在表里", label))
+        }
+        return RouteRemoval(message: L.t("已删除 %@", label), removed: true)
+    }
+
+    /// 把删掉的一整行加回去（撤回用）。
+    ///
+    /// 用 RouteEntry 而不是 Route 作参数：`Route` 的校验不允许前缀 0，默认路由就永远还原不回来。
+    /// 另外只有 RouteEntry 带接口名，link# 直连路由要靠它才能重建。
+    @discardableResult
+    static func restore(entry: RouteEntry) throws -> String {
+        guard let prefix = entry.prefixLength else {
+            throw RouteError.invalidRoute(L.t("%@ 的掩码 %@ 不是合法掩码，无法还原这条路由",
+                                              entry.destination, entry.mask))
+        }
+        let label = destinationLabel(entry, prefix: prefix)
+
+        // 系统可能已经把这一条重建了（接口路由很常见），那就没什么好还原的。
+        // 比的是整行而不是网段：default 这种每个接口各有一条，只看网段会拿别的那条
+        // 当自己，真正要还原的这一条反而漏掉。
+        if isPresent(entry) {
+            return L.t("%@ 已被系统重新生成，无需还原", label)
+        }
+
+        var arguments = ["-n", "add"] + scopeArguments(entry)
+            + destinationArguments(entry, prefix: prefix)
+        if entry.isInterfaceScope {
+            guard !entry.interface.isEmpty else {
+                throw RouteError.invalidRoute(L.t("%@ 是接口直连路由，但路由表里没给出接口名，无法还原", label))
+            }
+            // -interface 必须是最后一段修饰符（见 man route），所以放在网关的位置上。
+            arguments.append(contentsOf: ["-interface", entry.interface])
+        } else if !entry.gateway.isEmpty {
+            arguments.append(entry.gateway)
+        } else {
+            throw RouteError.invalidRoute(L.t("%@ 在路由表里没有下一跳，无法还原", label))
+        }
+
+        let result = try Shell.run(Shell.routePath, arguments, privileged: true)
+        guard result.succeeded else {
+            throw RouteError.commandFailed(L.t("route add %@ 失败：%@", label, result.combinedMessage))
+        }
+        if !isPresent(entry) {
+            throw RouteError.commandFailed(L.t("route add %@ 没有生效，这条路由不在表里", label))
+        }
+        return L.t("已还原 %@", label)
+    }
+
+    /// 这一行还在不在路由表里。
+    ///
+    /// 比网段、掩码、下一跳三样，不能只比网段：同一个网段可能并排好几条（下一跳不同，
+    /// default 最典型——en0 一条、每个 bridge 各一条），只比网段会把「删掉其中一条」
+    /// 看成「一条都没少」。
+    static func isPresent(_ entry: RouteEntry) -> Bool {
+        return currentRoutes().contains { item in
+            return item.destination == entry.destination
+                && item.mask == entry.mask
+                && item.gateway == entry.gateway
+        }
+    }
+
     // MARK: - 私有
+
+    /// 把操作范围钉在某个接口上，只用于默认路由。
+    ///
+    /// 一个接口可能各有一条 default（en0 一条、每个 bridge 一条），`route delete default`
+    /// 不带限定删的是匹配到的第一条——用户点的是 bridge 那条，掉的很可能是 en0 的主出口。
+    /// 这些 default 的网关又是 link#N，本来就不能靠网关区分，只剩 -ifscope 可用。
+    ///
+    /// -ifscope 是精确匹配，不是「缩小搜索范围」：它只认本身就绑定了接口的路由
+    /// （flags 里那个 I，例如 `UCSIg`）。实测拿它去删一条不带 I 的普通路由，
+    /// 命令返回 0 但路由纹丝不动。这个代价是有意接受的——最坏结果是「删不掉并明确报错」，
+    /// 比「删错一条、当场断网」好得多，而且真删不动时 delete 的后置读表会把它变成失败提示。
+    private static func scopeArguments(_ entry: RouteEntry) -> [String] {
+        if entry.isDefault && entry.isInterfaceScope && !entry.interface.isEmpty {
+            return ["-ifscope", entry.interface]
+        }
+        return []
+    }
+
+    /// route 命令里描述"哪条路由"的那一段。
+    /// 默认路由用 `default` 这个写法：写成 `-net 0.0.0.0/0` 在部分系统版本上找不到表项。
+    private static func destinationArguments(_ entry: RouteEntry, prefix: Int) -> [String] {
+        if entry.isDefault { return ["default"] }
+        return ["-net", "\(entry.destination)/\(prefix)"]
+    }
+
+    private static func destinationLabel(_ entry: RouteEntry, prefix: Int) -> String {
+        return entry.isDefault ? "default" : "\(entry.destination)/\(prefix)"
+    }
 
     private static func add(_ route: Route, network: String, prefix: Int) throws -> String {
         let target = "\(network)/\(prefix)"

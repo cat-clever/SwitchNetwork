@@ -50,7 +50,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         window.contentView = hosting
         // 关掉窗口不销毁实例，菜单栏里「打开主窗口」才能再把它找回来。
         window.isReleasedWhenClosed = false
-        window.minSize = NSSize(width: 940, height: 660)
+        // 用 contentMinSize 而不是 minSize：minSize 限的是窗口外框，含标题栏约 28pt，
+        // 内容区会比 MainWindowView 里要求的 minHeight 矮一截，缩到最小时顶栏被挤出可视区、上半截被裁掉。
+        // 这两个数和 MainWindowView 的 .frame(minWidth: 940, minHeight: 660) 是一对，改一个要跟着改另一个。
+        window.contentMinSize = NSSize(width: 940, height: 660)
         window.titlebarSeparatorStyle = .line
         window.center()
         _ = window.setFrameAutosaveName("SwitchNetworkMainWindow")

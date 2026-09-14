@@ -92,6 +92,7 @@ final class Localization {
                 englishStringsOverview,
                 englishStringsModels,
                 englishStringsNetwork,
+                englishStringsRoutes,
                 englishStringsUpdate,
                 englishStringsApp]
     }

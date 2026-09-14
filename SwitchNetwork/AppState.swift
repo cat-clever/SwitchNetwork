@@ -50,6 +50,33 @@ final class AppState: ObservableObject {
     /// 上次查到结果的时间，设置页显示用。
     @Published private(set) var lastUpdateCheck: Date?
 
+    /// 系统当前路由表（只读快照，仅 IPv4）。
+    @Published private(set) var systemRoutes: [RouteEntry] = []
+    /// 正在读路由表。读不跟写抢，所以不占 routeOperationCount——
+    /// 进页面只是读一次，按钮不该显示成「正在写入」。
+    @Published private(set) var isLoadingRoutes = false
+    /// 读路由表失败过。要跟「还没读」区分开：macOS 的路由表不可能是空的
+    /// （至少有 lo0 和接口直连），所以拿到空结果只可能是读失败，
+    /// 直接按空表显示会让用户以为路由全被删了。
+    @Published private(set) var routeLoadFailed = false
+    /// 正在往路由表里写（增删改）。单独计数，不复用 activeApplyCount——
+    /// 那个被「网络服务优先级」的按钮拿来禁用了，混在一起会让它莫名变灰。
+    @Published private(set) var routeOperationCount = 0
+    /// 页面顶部那条提示。删除/还原/新增的结果都写这里，过一会儿自动消失。
+    /// 需要长期留着的是 deletedRoutes，不是它。
+    @Published private(set) var routeBanner: RouteBanner?
+    /// 本次运行删掉的路由，供「本次删除」列表还原。仅内存，重启即消失。
+    @Published private(set) var deletedRoutes: [DeletedRoute] = []
+
+    /// 顶部提示条。
+    struct RouteBanner: Identifiable {
+        let id = UUID()
+        let text: String
+        let isError: Bool
+        /// 非 nil 时提示条上给一个「撤回」按钮，指向 deletedRoutes 里的那一条。
+        let undoID: UUID?
+    }
+
     @Published var settings: AppSettings = AppSettings() {
         didSet {
             if settings != oldValue {
@@ -69,9 +96,19 @@ final class AppState: ObservableObject {
     private var hasStarted = false
     /// 云端文件还没下载完时重试读了几次。
     private var cloudRetryCount = 0
+    /// 顶部提示条的引线，不是状态。下一次提示会把它掐掉重新计时。
+    private var routeBannerTimer: DispatchWorkItem?
+
+    /// 顶部提示条挂多久。够看清一句话，又不至于一直占着屏幕顶部。
+    private static let routeBannerSeconds: Double = 12
 
     var isApplying: Bool {
         return activeApplyCount > 0
+    }
+
+    /// 路由表页的忙碌态。和 isApplying 分开，见 routeOperationCount 的说明。
+    var isRouteBusy: Bool {
+        return routeOperationCount > 0
     }
 
     /// 算出生效的语言代码（"跟随系统"在这里被解析成具体的 zh-Hans / en）。
@@ -641,6 +678,207 @@ final class AppState: ObservableObject {
     func refreshAll() {
         monitor.refresh()
         refreshServiceOrder()
+    }
+
+    // MARK: - 路由表
+
+    /// 重新读一遍系统路由表。进页面、手动刷新、每次增删改之后都走它。
+    func loadRoutes() {
+        isLoadingRoutes = true
+        applyQueue.async {
+            let read = RouteManager.readRoutes()
+            DispatchQueue.main.async {
+                self.isLoadingRoutes = false
+                self.systemRoutes = read.routes
+                self.routeLoadFailed = read.failed
+            }
+        }
+    }
+
+    /// 删一条路由。删成了才记进「本次删除」，没删成不记——
+    /// 记了会给出一个撤回按钮，点下去却什么也没发生，反而更让人糊涂。
+    func deleteRoute(_ entry: RouteEntry) {
+        routeOperationCount += 1
+        Log.shared.info(L.t("开始删除路由 %@", entry.summary))
+        applyQueue.async {
+            var outcome = RouteOperationOutcome()
+            do {
+                let removal = try RouteManager.delete(entry: entry)
+                outcome.detail = removal.message
+                // 只有真删掉了才进「本次删除」。本来就不在表里的那条，一点撤回反而会把它
+                // 加出来——而它是一条系统已经不要了的路由，加回去纯属添乱。
+                if removal.removed {
+                    outcome.undoItem = DeletedRoute(entry: entry, deletedAt: Date(), restoreFailure: nil)
+                }
+            } catch {
+                outcome.failure = error.localizedDescription
+            }
+            self.finishRouteOperation(outcome, subject: entry.summary)
+        }
+    }
+
+    /// 撤回一次删除。
+    func restoreRoute(id: UUID) {
+        guard let item = deletedRoutes.first(where: { $0.id == id }) else { return }
+        routeOperationCount += 1
+        Log.shared.info(L.t("开始还原路由 %@", item.entry.summary))
+        applyQueue.async {
+            var outcome = RouteOperationOutcome()
+            outcome.undoID = id
+            do {
+                outcome.detail = try RouteManager.restore(entry: item.entry)
+            } catch {
+                outcome.failure = error.localizedDescription
+            }
+            self.finishRouteOperation(outcome, subject: item.entry.summary)
+        }
+    }
+
+    /// 加一条临时路由。不进任何配置，也不落盘——重启之后路由表本来就会被系统重建。
+    func addRoute(_ route: Route) {
+        routeOperationCount += 1
+        Log.shared.info(L.t("开始新增路由 %@", route.summary))
+        applyQueue.async {
+            var outcome = RouteOperationOutcome()
+            do {
+                outcome.detail = try RouteManager.apply(route)
+            } catch {
+                outcome.failure = error.localizedDescription
+            }
+            self.finishRouteOperation(outcome, subject: route.summary)
+        }
+    }
+
+    /// 改一条路由。
+    ///
+    /// 不能直接调 `RouteManager.apply`：那个的语义是「同一网段换下一跳」，
+    /// 网段本身改了它会在新网段上加一条、旧的那条原地留着。所以先按整行删掉旧的再加新的。
+    func updateRoute(_ route: Route, replacing old: RouteEntry) {
+        routeOperationCount += 1
+        Log.shared.info(L.t("开始修改路由 %@", old.summary))
+        applyQueue.async {
+            var outcome = RouteOperationOutcome()
+            do {
+                try RouteManager.delete(entry: old)
+                do {
+                    outcome.detail = try RouteManager.apply(route)
+                } catch {
+                    outcome.failure = self.rollBackMessage(error.localizedDescription, entry: old)
+                }
+            } catch {
+                outcome.failure = error.localizedDescription
+            }
+            self.finishRouteOperation(outcome, subject: old.summary)
+        }
+    }
+
+    /// 点掉顶部提示条。
+    func dismissRouteBanner() {
+        cancelRouteBannerTimer()
+        routeBanner = nil
+    }
+
+    /// 提示条上那个「撤回」按钮的动作。
+    func undoDeletionFromBanner() {
+        guard let banner = routeBanner else { return }
+        guard let id = banner.undoID else { return }
+        restoreRoute(id: id)
+    }
+
+    /// 这条路由的网段是不是某份配置里写着的，是的话返回配置名。
+    ///
+    /// 只比网段不比下一跳：配置里只要写着这个网段，下次自动应用就会把这条路由写回来，
+    /// 这正是要在界面上提醒用户的事。本应用是唯一按配置写路由的主体，命中基本可以确定是它写的。
+    func profileName(owning entry: RouteEntry) -> String? {
+        for profile in profiles {
+            for route in profile.routes {
+                if route.normalizedNetwork == entry.destination && route.subnetMask == entry.mask {
+                    return profile.name
+                }
+            }
+        }
+        return nil
+    }
+
+    /// 一次路由操作的收成。凑成一个结构，四个入口就能共用一个收尾。
+    private struct RouteOperationOutcome {
+        var detail: String?
+        var failure: String?
+        /// 删成功后要放进「本次删除」的那一条。
+        var undoItem: DeletedRoute?
+        /// 还原成功后要从「本次删除」里拿掉的那个 id。
+        var undoID: UUID?
+    }
+
+    /// 收尾：回主线程更新表格、撤回列表、提示条和日志。
+    private func finishRouteOperation(_ outcome: RouteOperationOutcome, subject: String) {
+        let read = RouteManager.readRoutes()
+        DispatchQueue.main.async {
+            self.routeOperationCount = max(0, self.routeOperationCount - 1)
+            self.systemRoutes = read.routes
+            self.routeLoadFailed = read.failed
+
+            if let item = outcome.undoItem {
+                self.deletedRoutes.insert(item, at: 0)
+            }
+            if let id = outcome.undoID {
+                if let message = outcome.failure {
+                    // 还原失败就留在列表里让用户重试，原因写在那一行上，不静默吞掉。
+                    if let index = self.deletedRoutes.firstIndex(where: { $0.id == id }) {
+                        self.deletedRoutes[index].restoreFailure = message
+                    }
+                } else {
+                    self.deletedRoutes.removeAll { $0.id == id }
+                }
+            }
+
+            if let message = outcome.failure {
+                Log.shared.error(L.t("路由操作失败（%@）：%@", subject, message))
+                self.showRouteBanner(text: message, isError: true, undoID: nil)
+            } else if let detail = outcome.detail {
+                Log.shared.success(detail)
+                var undoID: UUID?
+                if let item = outcome.undoItem {
+                    undoID = item.id
+                }
+                self.showRouteBanner(text: detail, isError: false, undoID: undoID)
+            }
+        }
+    }
+
+    /// 改路由是「先删后加」，加失败时旧的已经没了。这里把它加回去，
+    /// 免得用户只是想把一条路由改一下，结果反而把整条路由弄丢。
+    private func rollBackMessage(_ reason: String, entry: RouteEntry) -> String {
+        do {
+            try RouteManager.restore(entry: entry)
+            return L.t("%@；已把原来的 %@ 加回去", reason, entry.summary)
+        } catch {
+            Log.shared.error(L.t("回滚路由 %@ 也失败了：%@", entry.summary, error.localizedDescription))
+            return L.t("%@；原来的 %@ 也没能加回去，请到路由表里手动补一条", reason, entry.summary)
+        }
+    }
+
+    private func showRouteBanner(text: String, isError: Bool, undoID: UUID?) {
+        cancelRouteBannerTimer()
+        let banner = RouteBanner(text: text, isError: isError, undoID: undoID)
+        routeBanner = banner
+        let work = DispatchWorkItem { [weak self] in
+            guard let state = self else { return }
+            // 只清掉自己这一次：后来的提示条已经换了 id，不该被上一条的计时器顺手抹掉。
+            guard let current = state.routeBanner else { return }
+            if current.id == banner.id {
+                state.routeBanner = nil
+            }
+        }
+        routeBannerTimer = work
+        DispatchQueue.main.asyncAfter(deadline: .now() + Self.routeBannerSeconds, execute: work)
+    }
+
+    private func cancelRouteBannerTimer() {
+        if let timer = routeBannerTimer {
+            timer.cancel()
+        }
+        routeBannerTimer = nil
     }
 
     // MARK: - 网络服务优先级

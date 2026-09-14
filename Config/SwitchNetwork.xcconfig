@@ -5,8 +5,8 @@
 //
 // 注意：别在 Xcode 的「Versioning」栏里改版本，那会把值写回 project.pbxproj 而盖掉这里。
 
-MARKETING_VERSION = 0.0.1
-CURRENT_PROJECT_VERSION = 1
+MARKETING_VERSION = 0.0.2
+CURRENT_PROJECT_VERSION = 2
 
 // GitHub 仓库，格式 用户名/仓库名（不要写 https:// 前缀，xcconfig 里 // 是注释符号）
 SWITCHNETWORK_GITHUB_REPO = cat-clever/SwitchNetwork

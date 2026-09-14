@@ -4,6 +4,7 @@ enum MainSection: String, CaseIterable, Identifiable {
     case overview
     case profiles
     case automation
+    case routes
     case settings
 
     var id: String { return rawValue }
@@ -13,6 +14,7 @@ enum MainSection: String, CaseIterable, Identifiable {
         case .overview: return L.t("接口概览")
         case .profiles: return L.t("配置管理")
         case .automation: return L.t("自动化规则")
+        case .routes: return L.t("路由表")
         case .settings: return L.t("设置")
         }
     }
@@ -22,13 +24,22 @@ enum MainSection: String, CaseIterable, Identifiable {
         case .overview: return Symbols.resolve("rectangle.grid.2x2", fallback: "square.grid.2x2")
         case .profiles: return Symbols.resolve("list.bullet.rectangle", fallback: "list.bullet")
         case .automation: return Symbols.resolve("bolt.circle", fallback: "bolt")
+        case .routes: return Symbols.resolve("arrow.triangle.branch", fallback: "arrow.triangle.swap")
         case .settings: return Symbols.resolve("gearshape", fallback: "gear")
         }
     }
 
-    /// 搜索框只在会列出配置的页面出现。
+    /// 搜索框只在会列出条目的页面出现。
     var supportsSearch: Bool {
-        return self == .overview || self == .profiles
+        return self == .overview || self == .profiles || self == .routes
+    }
+
+    /// 搜索框里的提示语。每个页面找的东西不一样，别都用「搜索配置」。
+    var searchPlaceholder: String {
+        switch self {
+        case .routes: return L.t("搜索路由")
+        default: return L.t("搜索配置")
+        }
     }
 }
 
@@ -78,6 +89,8 @@ struct MainWindowView: View {
             ProfileManagerView(searchText: searchText)
         case .automation:
             AutomationView(onNavigateToProfiles: { section = .profiles })
+        case .routes:
+            RoutesView(searchText: searchText)
         case .settings:
             SettingsView(showLog: { isShowingLog = true })
         }
@@ -200,7 +213,7 @@ struct TopNavBar: View {
             Spacer(minLength: 8)
 
             if section.supportsSearch {
-                SearchField(text: $searchText)
+                SearchField(text: $searchText, placeholder: section.searchPlaceholder)
             }
 
             Button(action: { section = .settings }) {
@@ -256,13 +269,14 @@ private struct SectionTab: View {
 
 private struct SearchField: View {
     @Binding var text: String
+    let placeholder: String
 
     var body: some View {
         HStack(spacing: 5) {
             Image(systemName: Symbols.resolve("magnifyingglass"))
                 .font(.system(size: 11))
                 .foregroundColor(.secondary)
-            TextField(L.t("搜索配置"), text: $text)
+            TextField(placeholder, text: $text)
                 .textFieldStyle(.plain)
                 .font(.system(size: 12))
                 .frame(width: 140)
