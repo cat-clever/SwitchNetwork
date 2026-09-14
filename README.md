@@ -1,8 +1,22 @@
 # SwitchNetwork
 
+**简体中文** | [English](README.en.md)
+
 macOS 上按场景切换网络配置的小工具。
 
 把一套「IP / 掩码 / 网关 / DNS / 静态路由」存成一份**配置**，插上网线自动套用，或者点一下切换；不需要的时候一键把接口**交还系统**（切回 DHCP、DNS 自动获取、撤掉本应用写进去的静态路由）。
+
+## 界面预览
+
+**接口概览** —— 每个接口当前的 IP、网关、DNS、配置方式，链路通没通、这份配置是不是自动应用的，都在这一页。
+
+![接口概览](docs/screenshots/overview.png)
+
+| **网络服务优先级** | **配置管理** |
+|---|---|
+| ![网络服务优先级](docs/screenshots/service-priority.png) | ![配置管理](docs/screenshots/profiles.png) |
+| **自动化规则** | **设置** |
+| ![自动化规则](docs/screenshots/automation.png) | ![设置](docs/screenshots/settings.png) |
 
 ## 功能
 
@@ -141,9 +155,11 @@ SwitchNetwork/              源码
   Support/                  日志、Shell 封装、版本与更新
   UI/                       SwiftUI 界面
   Localization/             中英文文案表
-.make_dmg.sh                打包 dmg
+docs/screenshots/           README 里的界面截图
+make_dmg.sh                 打包 dmg
 安装 SwitchNetwork（双击运行）.command
 .github/workflows/release.yml
+README.md / README.en.md    中文 / 英文说明
 ```
 
 ## 隐私
@@ -154,4 +170,4 @@ SwitchNetwork/              源码
 
 ## 许可
 
-个人项目，未附许可证，保留所有权利。
+[GPL-3.0](LICENSE)。
