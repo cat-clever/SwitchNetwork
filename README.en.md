@@ -111,8 +111,8 @@ To build a dmg:
 The version number lives in exactly **one** file: `Config/SwitchNetwork.xcconfig`.
 
 ```
-MARKETING_VERSION = 0.0.1
-CURRENT_PROJECT_VERSION = 1
+MARKETING_VERSION = 0.0.2
+CURRENT_PROJECT_VERSION = 2
 SWITCHNETWORK_GITHUB_REPO = cat-clever/SwitchNetwork
 ```
 

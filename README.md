@@ -111,8 +111,8 @@ xcodebuild -project SwitchNetwork.xcodeproj -scheme SwitchNetwork \
 版本号只在**一个文件**里改：`Config/SwitchNetwork.xcconfig`。
 
 ```
-MARKETING_VERSION = 0.0.1
-CURRENT_PROJECT_VERSION = 1
+MARKETING_VERSION = 0.0.2
+CURRENT_PROJECT_VERSION = 2
 SWITCHNETWORK_GITHUB_REPO = cat-clever/SwitchNetwork
 ```
 
