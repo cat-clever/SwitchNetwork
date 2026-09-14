@@ -165,7 +165,7 @@ final class StatusItemController: NSObject, NSMenuDelegate {
     }
 
     private func makeInterfaceItem(for status: InterfaceStatus) -> NSMenuItem {
-        let item = NSMenuItem(title: "\(status.identifier) · \(status.connectionLabel)",
+        let item = NSMenuItem(title: "\(status.displayName) · \(status.connectionLabel)",
                               action: nil,
                               keyEquivalent: "")
         item.image = dotImage(color: status.isConnected ? NSColor.systemGreen : NSColor.tertiaryLabelColor)
@@ -228,7 +228,7 @@ final class StatusItemController: NSObject, NSMenuDelegate {
     }
 
     private func interfaceTooltip(for status: InterfaceStatus) -> String {
-        var lines = [status.displayName]
+        var lines = [status.title]
         lines.append(L.t("当前 IP：%@", status.currentIPLabel))
         if let gateway = status.currentGateway, !gateway.isEmpty {
             lines.append(L.t("网关：%@", gateway))

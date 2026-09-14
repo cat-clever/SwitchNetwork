@@ -106,7 +106,7 @@ private struct InterfaceProfileGroup: View {
     let onEdit: (Profile) -> Void
 
     var body: some View {
-        SectionGroup(title: status.identifier, subtitle: subtitle) {
+        SectionGroup(title: status.displayName, subtitle: subtitle) {
             VStack(spacing: 10) {
                 ForEach(profiles) { profile in
                     ProfileCard(profile: profile, status: status, onEdit: { onEdit(profile) })
@@ -120,7 +120,10 @@ private struct InterfaceProfileGroup: View {
     }
 
     private var subtitle: String {
-        var parts: [String] = [status.displayName]
+        var parts: [String] = []
+        if let secondary = status.secondaryIdentifier {
+            parts.append(secondary)
+        }
         if let service = status.serviceName {
             parts.append(L.t("网络服务 %@", service))
         } else {

@@ -83,7 +83,7 @@ struct ProfileEditorView: View {
                                 .tag(draft.interfaceIdentifier)
                         }
                         ForEach(state.interfaces) { status in
-                            Text("\(status.identifier) · \(status.displayName)")
+                            Text(status.title)
                                 .tag(status.identifier)
                         }
                     }

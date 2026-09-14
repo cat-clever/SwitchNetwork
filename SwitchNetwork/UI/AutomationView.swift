@@ -89,7 +89,7 @@ struct AutomationView: View {
             VStack(alignment: .leading, spacing: 0) {
                 CardRow(icon: status.type.symbolName,
                         iconTint: status.isConnected ? Theme.successColor : Color.secondary,
-                        title: "\(status.identifier) · \(status.displayName)",
+                        title: status.title,
                         subtitle: status.isConnected ? L.t("已连接 · %@", status.currentIPLabel) : L.t("未连接"),
                         titleAccessory: accessory,
                         showsHover: false) {

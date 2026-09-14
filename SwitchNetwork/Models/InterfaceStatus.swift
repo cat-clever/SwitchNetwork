@@ -107,9 +107,17 @@ struct InterfaceStatus: Identifiable, Equatable {
         return serviceName != nil
     }
 
-    /// 用于界面上"标识 + 名称"的一行文字。
+    /// 跟在名字后面的设备名（如 en0）。和名字相同时返回 nil，界面据此不重复显示。
+    var secondaryIdentifier: String? {
+        return identifier == displayName ? nil : identifier
+    }
+
+    /// 「Ethernet · en0」这样的一行文字：先给人看的名字，再是设备名。
     var title: String {
-        return "\(identifier) · \(displayName)"
+        if let secondary = secondaryIdentifier {
+            return "\(displayName) · \(secondary)"
+        }
+        return displayName
     }
 
     var connectionLabel: String {

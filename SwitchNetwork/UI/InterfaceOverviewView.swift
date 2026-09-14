@@ -90,11 +90,13 @@ struct InterfaceCard: View {
 
             VStack(alignment: .leading, spacing: 3) {
                 HStack(spacing: 7) {
-                    Text(status.identifier)
-                        .font(.system(size: 14, weight: .semibold))
                     Text(status.displayName)
-                        .font(.system(size: 12))
-                        .foregroundColor(.secondary)
+                        .font(.system(size: 14, weight: .semibold))
+                    if let secondary = status.secondaryIdentifier {
+                        Text(secondary)
+                            .font(.system(size: 12))
+                            .foregroundColor(.secondary)
+                    }
                     HStack(spacing: 4) {
                         StatusDot(isOn: status.isConnected)
                         Text(status.connectionLabel)
